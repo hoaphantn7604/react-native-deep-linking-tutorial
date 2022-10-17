@@ -44,14 +44,14 @@ const App = () => {
 
   // demoapp://notification=/id:123/name:hoaphan
   const handleDeepLinks = url => {
-    const replaceScheme = url.replace(APP_SCHEME, ''); // notification=/id:123/name:hoaphan
-    const splitString = replaceScheme.split('='); // [notification, /id:123/name:hoaphan]
+    const removeAppScheme = url.replace(APP_SCHEME, ''); // notification=/id:123/name:hoaphan
+    const splitUrl = removeAppScheme.split('='); // [notification, /id:123/name:hoaphan]
 
-    const route = splitString[0]; // notification
-    const params = splitString[1]; // /id:123/name:hoaphan
-    const splitParam = params.split('/'); // ['', 'id:123', 'name:hoaphan']
+    const route = splitUrl[0]; // notification
+    const params = splitUrl[1]; // /id:123/name:hoaphan
+    const splitParams = params.split('/'); // ['', 'id:123', 'name:hoaphan']
 
-    const mapData = splitParam
+    const mapData = splitParams
       .map((e, i) => {
         if (e) {
           return {
@@ -63,12 +63,12 @@ const App = () => {
       .filter(e => e) // [{id: '123'}, {name: 'hoaphan'}]
       .reduce((a, b) => Object.assign(a, b), {}); // {id: '123', name: 'hoaphan'}
 
-    const data = {
+    const response = {
       route,
       ...mapData,
     };
 
-    Alert.alert(data.route);
+    Alert.alert(JSON.stringify(response));
   };
 
   return (
