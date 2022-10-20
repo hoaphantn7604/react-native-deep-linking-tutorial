@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
+import DeepLinking from 'react-native-deep-linking';
 
 const APP_SCHEME = 'demoapp://';
 
@@ -28,48 +29,27 @@ const App = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  // cmd: npx uri-scheme open "demoapp://chat/hoaphan/test@gmail.com" --android
+
   useEffect(() => {
+    DeepLinking.addScheme(APP_SCHEME);
+
     Linking.getInitialURL().then(url => {
       if (url) {
-        handleDeepLinks(url);
+        DeepLinking.evaluateUrl(url);
       }
     });
 
     Linking.addEventListener('url', url => {
       if (url) {
-        handleDeepLinks(url);
+        DeepLinking.evaluateUrl(url);
       }
     });
+
+    DeepLinking.addRoute('/chat/:name/:email', res => {
+      Alert.alert(`${res.name}-${res.email}`);
+    });
   }, []);
-
-  // demoapp://notification=/id:123/name:hoaphan
-  const handleDeepLinks = url => {
-    const removeAppScheme = url.replace(APP_SCHEME, ''); // notification=/id:123/name:hoaphan
-    const splitUrl = removeAppScheme.split('='); // [notification, /id:123/name:hoaphan]
-
-    const route = splitUrl[0]; // notification
-    const params = splitUrl[1]; // /id:123/name:hoaphan
-    const splitParams = params.split('/'); // ['', 'id:123', 'name:hoaphan']
-
-    const mapData = splitParams
-      .map((e, i) => {
-        if (e) {
-          return {
-            [e.split(':')[0]]: e.split(':')[1],
-          };
-        }
-        return null;
-      }) // [null, {id:"123"}, {name: 'hoaphan'}]
-      .filter(e => e) // [{id: '123'}, {name: 'hoaphan'}]
-      .reduce((a, b) => Object.assign(a, b), {}); // {id: '123', name: 'hoaphan'}
-
-    const response = {
-      route,
-      ...mapData,
-    };
-
-    Alert.alert(JSON.stringify(response));
-  };
 
   return (
     <SafeAreaView style={backgroundStyle}>
