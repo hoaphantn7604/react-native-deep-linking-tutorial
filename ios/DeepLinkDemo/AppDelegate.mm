@@ -5,6 +5,8 @@
 #import <React/RCTRootView.h>
 
 #import <React/RCTAppSetupUtils.h>
+// Deep linking
+#import <React/RCTLinkingManager.h>
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -15,16 +17,6 @@
 #import <ReactCommon/RCTTurboModuleManager.h>
 
 #import <react/config/ReactNativeConfig.h>
-
-// iOS 9.x or newer
-#import <React/RCTLinkingManager.h>
-
-- (BOOL)application:(UIApplication *)application
-   openURL:(NSURL *)url
-   options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
-  return [RCTLinkingManager application:application openURL:url options:options];
-}
 
 static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
@@ -139,5 +131,13 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 }
 
 #endif
+
+// Deep linking
+- (BOOL)application:(UIApplication *)application
+   openURL:(NSURL *)url
+   options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [RCTLinkingManager application:application openURL:url options:options];
+}
 
 @end

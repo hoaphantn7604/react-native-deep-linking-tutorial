@@ -40,7 +40,7 @@ const App = () => {
       }
     });
 
-    Linking.addEventListener('url', url => {
+    Linking.addEventListener('url', ({url}) => {
       if (url) {
         DeepLinking.evaluateUrl(url);
       }
